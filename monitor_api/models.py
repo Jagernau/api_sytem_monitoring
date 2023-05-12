@@ -43,11 +43,12 @@ class Vehicle(Base):
     __tablename__ = 'vehicles'
     id = Column(Integer, primary_key=True, autoincrement=True)
     number = Column(String)
-    simnumber1 = Column(String)
+    simnumber = Column(String)
     imei = Column(String)
-    device_type_id = Column(Integer)
-    model_id = Column(String)
-
+    deviceTypeId = Column(Integer)
+    modelId = Column(String)
+    vehicleId = Column(String)
+    deviceTypeId = Column(String)
     agentGuid = Column(String, ForeignKey('agents.agentId'))
 
     vehicle_owner = relationship("Agent", back_populates="vehicles")
