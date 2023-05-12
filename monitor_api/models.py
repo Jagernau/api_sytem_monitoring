@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, lambda_stmt
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from working_suntel.monitor_api.database import Base
+from .database import Base
 
 class Agent(Base):
     __tablename__ = 'agents'
-    id = Column(String, primary_key=True)
-    agentId = Column(String) #"0000-0000-0000-0000-00000000000"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    agentId = Column(String, unique=True) #"0000-0000-0000-0000-00000000000"
     accINN = Column(String, nullable=True) 
     accKPP = Column(String, nullable=True)
     accAddress = Column(String, nullable=True)
@@ -20,8 +20,8 @@ class Agent(Base):
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(String, primary_key=True)
-    userId = Column(String) #"0000-0000-0000-0000-00000000000"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    userId = Column(String, unique=True) #"0000-0000-0000-0000-00000000000"
     name = Column(String, nullable=True)
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
@@ -35,14 +35,13 @@ class User(Base):
     isEnabled = Column(Boolean, default=True)
     leaderId = Column(String, nullable=True)
     organization = Column(String, nullable=True)
-#    customGroups =
     agentGuid = Column(String, ForeignKey('agents.agentId'))
 
     user_owner = relationship("Agent", back_populates="users")
 
 class Vehicle(Base):
     __tablename__ = 'vehicles'
-    id = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     number = Column(String)
     simnumber1 = Column(String)
     imei = Column(String)

@@ -1,0 +1,12 @@
+certifi==2022.12.7
+charset-normalizer==3.1.0
+future==0.18.3
+idna==3.4
+json-parser==1.2.0
+python-dotenv==1.0.0
+python-wialon==1.2.2
+requests==2.29.0
+simplejson==3.19.1
+SQLAlchemy==2.0.12
+typing_extensions==4.5.0
+urllib3==1.26.15
