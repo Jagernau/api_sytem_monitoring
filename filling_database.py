@@ -1,9 +1,8 @@
-from pydantic import NonNegativeFloat
-from monitor_api import models
-from monitor_api.database import SessionLocal, Base, engine
+import models
+from database import SessionLocal, Base, engine
 import config
 from requests_func import login_gln, get_gln_json
-
+from sqlalchemy import update
 
 gln_login = config.LOGIN["gln_login"]
 frt_login = config.LOGIN["frt_login"]
@@ -15,44 +14,59 @@ gln_domain = config.DOMAI_NAME["gln_domain"]
 frt_domain = config.DOMAI_NAME["frt_domain"]
 
 gln_views = ["agents", "users", "vehicles",]
-frt_views = []
 
 
 token = login_gln(gln_domain, login=gln_login, password=gln_password)
 
-name_view = "agents"
-
-gln_data = get_gln_json(token, gln_domain, name_view)
 
 
 db = SessionLocal()
 Base.metadata.create_all(bind=engine)
 
+
+gln_agents = get_gln_json(token, gln_domain, "agents")
 #agents
-if gln_data is not None:
-    for i in gln_data:
-        if "00000000" in i["client"]["agentId"]:
-            check_agentId = i["client"]["id"]
+if gln_agents is not None:
+    for i in gln_agents:
+        if "80eb1587-12cf-44d4-b0d0-c09b7ddf6110" in i["id"]:
+            continue
+
+        if i["id"] == db.query(models.Agent).filter_by(agentId=i["id"]).first().agentId:
+            db.execute(update(models.Agent).where(models.Agent.agentId==i["id"]).values(
+
+                accINN = i["client"]["accINN"],
+                accKPP = i["client"]["accKPP"],
+                accAddress = i["client"]["accAddress"],
+                accFullName = i["client"]["accFullName"],
+                name = i["name"],
+                blocked = i["blocked"],
+                created = i["created"],
+            ))
+            db.commit()
+
         else:
-            check_agentId = i["client"]["agentId"]
-        place_in_db = models.Agent(
-                    agentId = check_agentId,
-                    accINN = i["client"]["accINN"],
-                    accKPP = i["client"]["accKPP"],
-                    accAddress = i["client"]["accAddress"],
-                    accFullName = i["client"]["accFullName"],
-                    name = i["name"],
-                    blocked = i["blocked"],
-                    created = i["created"],
-                    updated = i["updated"],
-        )
-        db.add(place_in_db)
 
-    db.commit()
+            place_in_db = models.Agent(
+                        agentId = i["id"],
+                        accINN = i["client"]["accINN"],
+                        accKPP = i["client"]["accKPP"],
+                        accAddress = i["client"]["accAddress"],
+                        accFullName = i["client"]["accFullName"],
+                        name = i["name"],
+                        blocked = i["blocked"],
+                        created = i["created"],
+                        updated = i["updated"],
+            )
+            db.add(place_in_db)
 
+        db.commit()
+
+gln_users = get_gln_json(token, gln_domain, "users")
 #user
-if gln_data is not None:
-    for i in gln_data:
+if gln_users is not None:
+    for i in gln_users:
+        if "80eb1587-12cf-44d4-b0d0-c09b7ddf6110" in i["agentGuid"]:
+            continue
         place_in_db = models.User(
 
             userId = i["id"], #"0000-0000-0000-0000-00000000000"
@@ -75,23 +89,30 @@ if gln_data is not None:
 
     db.commit()
 
+gln_vehicles = get_gln_json(token, gln_domain, "vehicles")
 #vehicle
-if gln_data is not None:
-    for i in gln_data:
+if gln_vehicles is not None:
+    for i in gln_vehicles:
+        if "80eb1587-12cf-44d4-b0d0-c09b7ddf6110" in i["owner"]:
+            continue
+        if "simnumber1" in i:
+            sim = i["simnumber1"]
+        else:
+            sim = None
         place_in_db = models.Vehicle(
 
             number = i["number"],
-            simnumber1 = i["simnumber"],
+            simnumber1 = sim,
             imei = i["imei"],
+            modelId = i["modelId"],
+
+            IdVehicle = i["id"], #"000000-0000-0000-0000000000"
+
+            vehicleId = i["vehicleId"], #000000
             deviceTypeId = i["deviceTypeId"],
-            modelId = i["model"],
-            vehicleId = i["id"],
-            deviceTypeId = i["deviceTypeId"],
-            agentGuid = i["agentGuid"],
+            agentGuid = i["owner"],
         )
         db.add(place_in_db)
 
     db.commit()
-
-
 db.close()

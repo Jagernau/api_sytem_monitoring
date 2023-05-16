@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from .database import Base
+from database import Base
 
 class Agent(Base):
     __tablename__ = 'agents'
@@ -43,12 +43,12 @@ class Vehicle(Base):
     __tablename__ = 'vehicles'
     id = Column(Integer, primary_key=True, autoincrement=True)
     number = Column(String)
-    simnumber = Column(String)
+    simnumber1 = Column(String, nullable=True)
     imei = Column(String)
     deviceTypeId = Column(Integer)
     modelId = Column(String)
-    vehicleId = Column(String)
-    deviceTypeId = Column(String)
+    IdVehicle = Column(String)
+    vehicleId = Column(Integer)
     agentGuid = Column(String, ForeignKey('agents.agentId'))
 
     vehicle_owner = relationship("Agent", back_populates="vehicles")
