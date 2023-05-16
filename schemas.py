@@ -3,52 +3,52 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 
 class UserSchema(BaseModel):
-    id = int
-    userId = str 
-    name = str 
-    email = str 
-    phone = str 
-    description = str 
-    firstName = str 
-    lastName = str
-    position = str 
-#    created = datetime.date
-#    updated = datetime.date
-#   lastLogged = datetime.date
-#    isEnabled = bool
-    leaderId = str 
-    organization = str 
-    agentGuid = str 
+    id: int | None
+    userId: str
+    name: str | None
+    email: str | None
+    phone: str | None
+    description: str | None
+    firstName: str | None
+    lastName: str | None
+    position: str | None
+    created: datetime.date
+    updated: datetime.date
+    lastLogged: datetime.date
+    isEnabled: bool
+    leaderId: str | None
+    organization: str | None
+    agentGuid: str | None
 
 #    user_owner = list[AgentSchema] = []
 
 class VehicleSchema(BaseModel):
-    id = int
-    number = str
-    simnumber1 = str
-    imei = str
-    deviceTypeId = int
-    modelId = str
-    IdVehicle = str
-    vehicleId = int
-    agentGuid = str
+    id: int
+    number: str | None
+    simnumber1: str | None
+    imei: str | None
+    deviceTypeId: int | None
+    modelId: str | None
+    IdVehicle: str | None
+    vehicleId: int | None
+    agentGuid: str | None
 
 #    vehicle_owner = list[AgentSchema] = []
 
 class AgentSchema(BaseModel):
-    id = int
-    agentId = str 
-    accINN = str
-    accKPP = str 
-    accAddress = str 
-    accFullName = str
-    name = str 
-    # blocked = bool
-    # created = datetime.date
-    # updated = datetime.date
-    #
-#    users = list[UserSchema]
-#    vehicles = list[VehicleSchema]
+    id: int
+    agentId: str | None
+    accINN: str | None
+    accKPP: str | None
+    accAddress: str | None
+    accFullName: str | None
+    name: str | None
+    blocked: bool
+    created: datetime.date
+    updated: datetime.date
+
+#    users: list[UserSchema] = []
+    vehicles: list = []
 
     class Config:
         orm_mode = True
