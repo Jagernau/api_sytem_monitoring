@@ -1,4 +1,5 @@
 import datetime
+from os import listdir
 from typing import List, Optional, Union
 from pydantic import BaseModel
 
@@ -20,7 +21,7 @@ class UserSchema(BaseModel):
     organization: str | None
     agentGuid: str | None
 
-#    user_owner = list[AgentSchema] = []
+    user_owner = list = []
 
 class VehicleSchema(BaseModel):
     id: int
@@ -33,7 +34,7 @@ class VehicleSchema(BaseModel):
     vehicleId: int | None
     agentGuid: str | None
 
-#    vehicle_owner = list[AgentSchema] = []
+    vehicle_owner = list = []
 
 class AgentSchema(BaseModel):
     id: int
@@ -47,7 +48,7 @@ class AgentSchema(BaseModel):
     created: datetime.date
     updated: datetime.date
 
-#    users: list[UserSchema] = []
+    users: list = []
     vehicles: list = []
 
     class Config:

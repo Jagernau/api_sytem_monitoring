@@ -14,6 +14,7 @@ class Agent(Base):
     blocked = Column(Boolean, default=False)
     created = Column(DateTime, nullable=True)
     updated = Column(DateTime, nullable=True)
+#    monitoring_system = Column(String)
 
     users = relationship("User", back_populates="user_owner")
     vehicles = relationship("Vehicle", back_populates="")
@@ -36,6 +37,7 @@ class User(Base):
     leaderId = Column(String, nullable=True)
     organization = Column(String, nullable=True)
     agentGuid = Column(String, ForeignKey('agents.agentId'))
+#    monitoring_system = Column(String)
 
     user_owner = relationship("Agent", back_populates="users")
 
@@ -50,5 +52,6 @@ class Vehicle(Base):
     IdVehicle = Column(String)
     vehicleId = Column(Integer)
     agentGuid = Column(String, ForeignKey('agents.agentId'))
+#    monitoring_system = Column(String)
 
     vehicle_owner = relationship("Agent", back_populates="vehicles")
